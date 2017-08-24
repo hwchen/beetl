@@ -9,7 +9,7 @@ pub trait CreateTablePostgres {
     fn create_table(&self) -> String;
 }
 
-pub trait Melt {
+pub trait MeltRecord {
     type V;
     type T;
 
@@ -18,7 +18,7 @@ pub trait Melt {
 
 #[cfg(test)]
 mod tests {
-    use super::{CreateTablePostgres, Melt};
+    use super::{CreateTablePostgres, MeltRecord};
 
     #[derive(CreateTablePostgres, Debug)]
     struct TestTable {
@@ -41,7 +41,7 @@ mod tests {
 
     #[test]
     fn test_melt() {
-        #[derive(Melt, Clone, Debug)]
+        #[derive(MeltRecord, Clone, Debug)]
         #[melt_targets(TestRecordOut)]
         struct TestRecord {
             id: usize,

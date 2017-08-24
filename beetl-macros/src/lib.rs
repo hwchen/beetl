@@ -27,7 +27,7 @@ fn impl_create_table_postgres(ast: &syn::DeriveInput) -> quote::Tokens {
     }
 }
 
-#[proc_macro_derive(Melt, attributes(melt))]
+#[proc_macro_derive(MeltRecord, attributes(melt))]
 pub fn melt(input: TokenStream) -> TokenStream {
     let s = input.to_string();
     let ast = syn::parse_derive_input(&s).unwrap();
@@ -100,13 +100,13 @@ fn impl_melt(ast: &DeriveInput) -> quote::Tokens {
                         }
                     }
                 },
-                _ => panic!("To derive Melt, must have #[melt(<target>)] attr."),
+                _ => panic!("To derive MeltRecord, must have #[melt(<target>)] attr."),
 
             }
         }
         targets
     };
-    println!("{:?}", targets);
+    //println!("{:?}", targets);
     let target = targets.get(0).expect("no target found");
 
     let mut idents_str = Vec::new();
@@ -115,7 +115,7 @@ fn impl_melt(ast: &DeriveInput) -> quote::Tokens {
         };
 
     quote! {
-        impl Melt for #name {
+        impl MeltRecord for #name {
             type V = #val_type;
             type T = #target;
 
