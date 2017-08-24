@@ -1,0 +1,7 @@
+[package]
+name = "beetl"
+version = "0.1.0"
+authors = ["Walther Chen <walther.chen@gmail.com>"]
+
+[dependencies]
+beetl-macros = { path = "beetl-macros" }
