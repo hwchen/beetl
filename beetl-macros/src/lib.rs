@@ -45,7 +45,7 @@ fn impl_melt(ast: &DeriveInput) -> quote::Tokens {
                 &VariantData::Struct(ref fields) => {
                     let mut idents = Vec::new();
                     for field in fields.iter() {
-                        if let Some(attr) = field.attrs.get(0) {
+                        if let Some(attr) = field.attrs.get(0) { // check that it checks all attrs
                             if let MetaItem::List(ref i, ref items) = attr.value {
                                 if i.to_string() == "melt" {
                                     if items.len() != 1 {
@@ -119,7 +119,7 @@ fn impl_melt(ast: &DeriveInput) -> quote::Tokens {
             type V = #val_type;
             type T = #target;
 
-            fn melt<F>(&mut self, out: &mut Vec<Self::T>, f: &F) where F: Fn(&str, Self::V, &Self, &mut Vec<Self::T>) {
+            fn melt<F>(&self, out: &mut Vec<Self::T>, f: &F) where F: Fn(&str, Self::V, &Self, &mut Vec<Self::T>) {
                 #(
                     let val = self.#idents;
 

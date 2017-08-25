@@ -14,7 +14,7 @@ pub trait MeltRecord {
     type V;
     type T;
 
-    fn melt<F>(&mut self, out: &mut Vec<Self::T>, f: &F) where  F: Fn(&str, Self::V, &Self, &mut Vec<Self::T>);
+    fn melt<F>(&self, out: &mut Vec<Self::T>, f: &F) where  F: Fn(&str, Self::V, &Self, &mut Vec<Self::T>);
 }
 
 #[cfg(test)]
