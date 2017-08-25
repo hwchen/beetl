@@ -4,7 +4,7 @@
 
 #[macro_use]
 extern crate beetl_macros;
-pub use beetl_macros;
+pub use beetl_macros::*;
 
 pub trait CreateTablePostgres {
     fn create_table(&self) -> String;
