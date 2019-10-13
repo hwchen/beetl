@@ -1,0 +1,7 @@
+error: derive MeltRecord only support structs
+ --> $DIR/basic.rs:4:1
+  |
+4 | / enum EnumRecord {
+5 | |     Variant
+6 | | }
+  | |_^
