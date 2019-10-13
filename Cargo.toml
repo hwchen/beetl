@@ -2,6 +2,10 @@
 name = "beetl"
 version = "0.1.0"
 authors = ["Walther Chen <walther.chen@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 beetl-macros = { path = "beetl-macros" }
+
+[workspace]
+members = ["beetl-macros"]
