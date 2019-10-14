@@ -1,15 +1,3 @@
-// downside; have ot keep on allocating memory whenver a change is made,
-// because it's a new struct, instead of just mutating memory and metadata
-
-// on the other hand; renames can just be done at beginning and end, and not
-// in the middle
-
-// in order to be more efficient, have to do multiple transforms at once, instead
-// of one after another
-
-// I guess that isn't so bad; pandas won't give you a chance to have that kind of
-// control anyways
-
 use beetl::MeltRecord;
 
 fn main() {
@@ -190,6 +178,8 @@ fn get_input_simple() -> Vec<SimpleInputRow> {
     ]
 }
 
+// helper
+fn get_input_simple() -> Vec<SimpleInputRow> {
 fn get_input_derived() -> Vec<DerivedInputRow> {
     vec![
         DerivedInputRow {
