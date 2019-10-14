@@ -10,9 +10,12 @@
 // I guess that isn't so bad; pandas won't give you a chance to have that kind of
 // control anyways
 
+use beetl::MeltRecord;
+
 fn main() {
     simple_handwritten();
-    simple_with_macro();
+    simple_with_manual_trait();
+    simple_with_derive();
 }
 
 fn simple_handwritten() {
@@ -48,8 +51,20 @@ fn simple_handwritten() {
     }
 }
 
-fn simple_with_macro() {
+fn simple_with_manual_trait() {
     let rows = get_input_simple();
+
+    let melt: Vec<_> = rows.into_iter()
+        .flat_map(|input_row| input_row.melt())
+        .collect();
+
+    for output_row in melt {
+        println!("{:?}", output_row);
+    }
+}
+
+fn simple_with_derive() {
+    let rows = get_input_derived();
 
     let melt: Vec<_> = rows.into_iter()
         .flat_map(|input_row| input_row.melt())
@@ -64,24 +79,32 @@ fn get_year(s: &str) -> u32 {
     s.chars().skip(8).collect::<String>().parse().unwrap()
 }
 
-//#[derive(MeltRecord)]
+#[derive(MeltRecord)]
 //#[melt(var(year: u32))]
 //#[melt(var_into(get_year))]
 //#[melt(value(exports: f32))]
-struct SimpleInputRow {
+struct DerivedInputRow {
     country: u32,
-//    #[melt(value_var)]
+    #[value_var]
     exports_2016: f32,
-//    #[melt(value_var)]
+    #[value_var]
     exports_2017: f32,
-//    #[melt(value_var)]
+    #[value_var]
     exports_2018: f32,
-//    #[melt(value_var)]
+    #[value_var]
     exports_2019: f32,
 }
 
 // ===============================================================================
 // template for procedurla macro (custom derive)
+
+struct SimpleInputRow {
+    country: u32,
+    exports_2016: f32,
+    exports_2017: f32,
+    exports_2018: f32,
+    exports_2019: f32,
+}
 
 impl SimpleInputRow {
     fn melt(self) -> SimpleInputRowMelt {
@@ -158,6 +181,25 @@ fn get_input_simple() -> Vec<SimpleInputRow> {
             exports_2019: 400.0,
         },
         SimpleInputRow {
+            country: 1,
+            exports_2016: 500.0,
+            exports_2017: 600.0,
+            exports_2018: 700.0,
+            exports_2019: 800.0,
+        },
+    ]
+}
+
+fn get_input_derived() -> Vec<DerivedInputRow> {
+    vec![
+        DerivedInputRow {
+            country: 0,
+            exports_2016: 100.0,
+            exports_2017: 200.0,
+            exports_2018: 300.0,
+            exports_2019: 400.0,
+        },
+        DerivedInputRow {
             country: 1,
             exports_2016: 500.0,
             exports_2017: 600.0,

@@ -1,8 +1,20 @@
 use beetl::MeltRecord;
 
 #[derive(MeltRecord)]
-struct Record {
-    id: u32,
+//#[melt(var(year: u32))]
+//#[melt(var_into(get_year))]
+//#[melt(value(exports: f32))]
+struct SimpleInputRow {
+    country: u32,
+    partner: u32,
+    #[value_var]
+    exports_2016: f32,
+    #[value_var]
+    exports_2017: f32,
+    #[value_var]
+    exports_2018: f32,
+    #[value_var]
+    exports_2019: f32,
 }
 
 #[test]

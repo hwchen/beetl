@@ -7,7 +7,7 @@ use proc_macro::TokenStream;
 use syn::{parse_macro_input, DeriveInput};
 
 
-#[proc_macro_derive(MeltRecord, attributes(melt))]
+#[proc_macro_derive(MeltRecord, attributes(melt, value_var))]
 pub fn derive_melt(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     expand::melt(&input)
