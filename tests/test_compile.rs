@@ -17,6 +17,20 @@ struct SimpleInputRow {
     exports_2019: f32,
 }
 
+#[derive(MeltRecord)]
+struct GenericInputRow<K> where K: Copy {
+    country: u32,
+    partner: K,
+    #[value_var]
+    exports_2016: f32,
+    #[value_var]
+    exports_2017: f32,
+    #[value_var]
+    exports_2018: f32,
+    #[value_var]
+    exports_2019: f32,
+}
+
 #[test]
 fn ui() {
     let t = trybuild::TestCases::new();

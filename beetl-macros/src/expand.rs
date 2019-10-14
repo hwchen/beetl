@@ -1,7 +1,9 @@
 // add a transform fn for var (col name)? or just a rename on the field?
 // add ability to rename the value and vars fields
 // check that all value vars have the same type
-// fix type parameters on impl, to allow user-specified types
+//
+// currently, value vars are moved, so the type needs to impl Copy. Could check the type and use
+// clone() if not Copy.
 
 use crate::attr;
 use proc_macro2::TokenStream;
@@ -17,9 +19,8 @@ pub fn melt(input: &DeriveInput) -> Result<TokenStream> {
 
 fn impl_struct(input: &DeriveInput, data: &DataStruct) -> Result<TokenStream> {
     let ty = &input.ident;
+
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
-
-
 
     let iterator_ty = format_ident!("{}Melt", ty);
     let output_ty = format_ident!("{}Output", iterator_ty);
@@ -56,9 +57,8 @@ fn impl_struct(input: &DeriveInput, data: &DataStruct) -> Result<TokenStream> {
         });
 
     Ok(quote!{
-//        impl #impl_generics MeltRecord<T> for #ty #ty_generics #where_clause {
-        impl MeltRecord<#iterator_ty, #output_ty> for #ty {
-            fn melt(self) -> #iterator_ty {
+        impl #impl_generics MeltRecord<#iterator_ty #ty_generics, #output_ty #ty_generics> for #ty #ty_generics #where_clause {
+            fn melt(self) -> #iterator_ty #ty_generics {
                 #iterator_ty {
                     row: self,
                     count: 0usize,
@@ -66,12 +66,12 @@ fn impl_struct(input: &DeriveInput, data: &DataStruct) -> Result<TokenStream> {
             }
         }
 
-        struct #iterator_ty {
-            row: #ty,
+        struct #iterator_ty #ty_generics #where_clause {
+            row: #ty #ty_generics,
             count: usize,
         }
-        impl Iterator for #iterator_ty {
-            type Item = #output_ty;
+        impl #impl_generics Iterator for #iterator_ty #ty_generics #where_clause {
+            type Item = #output_ty #ty_generics;
 
             fn next(&mut self) -> Option<Self::Item> {
                 if self.count < #value_vars_len {
@@ -99,7 +99,7 @@ fn impl_struct(input: &DeriveInput, data: &DataStruct) -> Result<TokenStream> {
         }
 
         #[derive(Debug)]
-        struct #output_ty {
+        struct #output_ty #ty_generics #where_clause {
             #(#id_vars_fields,)*
             var: String,
             value: #value_ty,
@@ -121,3 +121,4 @@ fn get_id_value_vars_members<'a>(fields: impl IntoIterator<Item = &'a Field>) ->
 
     Ok((id_vars, value_vars))
 }
+

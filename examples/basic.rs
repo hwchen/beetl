@@ -71,8 +71,8 @@ fn get_year(s: &str) -> u32 {
 //#[melt(var(year: u32))]
 //#[melt(var_into(get_year))]
 //#[melt(value(exports: f32))]
-struct DerivedInputRow {
-    country: u32,
+struct DerivedInputRow<K> where K: Copy {
+    country: K,
     #[value_var]
     exports_2016: f32,
     #[value_var]
@@ -178,9 +178,8 @@ fn get_input_simple() -> Vec<SimpleInputRow> {
     ]
 }
 
-// helper
-fn get_input_simple() -> Vec<SimpleInputRow> {
-fn get_input_derived() -> Vec<DerivedInputRow> {
+//helper
+fn get_input_derived() -> Vec<DerivedInputRow<u32>> {
     vec![
         DerivedInputRow {
             country: 0,
